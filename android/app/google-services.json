@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "969316193926",
+    "project_id": "alter-ed043",
+    "storage_bucket": "alter-ed043.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969316193926:android:944981202e5876c2eae307",
+        "android_client_info": {
+          "package_name": "com.example.alter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB32t1Ig9Vvfx4YcF1HXOLNoa8njKCccsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
