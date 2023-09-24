@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:969316193926:android:944981202e5876c2eae307",
+        "mobilesdk_app_id": "1:969316193926:android:e83676df3ff259b7eae307",
         "android_client_info": {
-          "package_name": "com.example.alter"
+          "package_name": "com.raymond.alter"
         }
       },
       "oauth_client": [],

@@ -25,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -57,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB32t1Ig9Vvfx4YcF1HXOLNoa8njKCccsI',
-    appId: '1:969316193926:android:944981202e5876c2eae307',
+    appId: '1:969316193926:android:e83676df3ff259b7eae307',
     messagingSenderId: '969316193926',
     projectId: 'alter-ed043',
     storageBucket: 'alter-ed043.appspot.com',
@@ -65,10 +62,19 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDUj_ArGKlM3BPT_0iWpqNBJ722FFjvbaU',
-    appId: '1:969316193926:ios:032e31b6ce53d5d4eae307',
+    appId: '1:969316193926:ios:2e6b06511143c1f3eae307',
     messagingSenderId: '969316193926',
     projectId: 'alter-ed043',
     storageBucket: 'alter-ed043.appspot.com',
-    iosBundleId: 'com.example.alter',
+    iosBundleId: 'com.raymond.alter',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDUj_ArGKlM3BPT_0iWpqNBJ722FFjvbaU',
+    appId: '1:969316193926:ios:891b27776c16b92eeae307',
+    messagingSenderId: '969316193926',
+    projectId: 'alter-ed043',
+    storageBucket: 'alter-ed043.appspot.com',
+    iosBundleId: 'com.raymond.alter.RunnerTests',
   );
 }
