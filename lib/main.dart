@@ -3,6 +3,7 @@ import 'package:alter/common/view_model/platform_theme_view_model.dart';
 import 'package:alter/firebase_options.dart';
 import 'package:alter/router_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,6 +43,15 @@ class Alter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (kDebugMode) {
+      SchedulerBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
+          () {
+        final isDarkMode =
+            SchedulerBinding.instance.platformDispatcher.platformBrightness ==
+                Brightness.dark;
+        ref.read(platformThemeProvider.notifier).setTheme(isDarkMode);
+      };
+    }
     return MaterialApp.router(
       title: 'Alter',
       theme: ref.watch(platformThemeProvider).isDarkMode
@@ -55,10 +65,12 @@ class Alter extends ConsumerWidget {
 class Theme {
   static final ThemeData light = ThemeData(
     primaryColor: const Color(
-      0xFFF4E007,
+      0xFFFEF8E5,
     ),
     textTheme: Typography.blackCupertino,
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: const Color(
+      0xFFFEF7E3,
+    ),
     useMaterial3: true,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white,
