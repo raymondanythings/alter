@@ -1,27 +1,30 @@
 import 'dart:math';
+import 'package:alter/constants/gaps.dart';
+import 'package:alter/constants/sizes.dart';
 import 'package:alter/features/authenticate/views/widgets/grid_background.dart';
 import 'package:alter/features/authenticate/views/widgets/login_form.dart';
 import 'package:alter/features/authenticate/views/widgets/sign_up_form.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthScreen extends ConsumerStatefulWidget {
+class AuthScreen extends StatefulWidget {
   static const String routeUrl = "/auth";
   static const String routeName = "auth";
 
   const AuthScreen({super.key});
 
   @override
-  ConsumerState<AuthScreen> createState() => _AuthScreenState();
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends ConsumerState<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen> {
+  String _selectedAuthType = "login";
+
+  final GlobalKey _stackKey = GlobalKey();
+
   void _onNavigationTap(String type) {
     _selectedAuthType = type;
-    setState(() {});
   }
 
-  String _selectedAuthType = "login";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,43 +40,57 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               child: const GridBackground(),
             ),
           ),
-          Positioned(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.center,
-                  colors: [
-                    const Color(0xFF000000).withOpacity(0.8),
-                    const Color(0xFF000000).withOpacity(
-                      0.5,
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: const Alignment(
+                  0,
+                  0.3,
+                ),
+                end: Alignment.topCenter,
+                colors: [
+                  Theme.of(context).scaffoldBackgroundColor,
+                  Theme.of(context).scaffoldBackgroundColor.withOpacity(0),
+                ],
+              ),
+            ),
+            alignment: Alignment.bottomCenter,
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Alter',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: Sizes.size20,
+                  ),
+                ),
+                Gaps.v14,
+                Stack(
+                  key: _stackKey,
+                  alignment: Alignment.bottomCenter,
+                  fit: StackFit.loose,
+                  children: [
+                    Offstage(
+                      offstage: _selectedAuthType != 'login',
+                      child: LoginForm(
+                        onNavigationtap: () => _onNavigationTap("signup"),
+                      ),
                     ),
-                    const Color(0xFF000000).withOpacity(
-                      0.3,
+                    Offstage(
+                      offstage: _selectedAuthType != 'signup',
+                      child: SignUpForm(
+                        onNavigationtap: () => _onNavigationTap("login"),
+                      ),
                     ),
                   ],
                 ),
-              ),
+              ],
             ),
-          ),
-          Stack(
-            children: [
-              Offstage(
-                offstage: _selectedAuthType != 'login',
-                child: LoginForm(
-                  onNavigationtap: () => _onNavigationTap("signup"),
-                ),
-              ),
-              Offstage(
-                offstage: _selectedAuthType != 'signup',
-                child: SignUpForm(
-                  onNavigationtap: () => _onNavigationTap("login"),
-                ),
-              ),
-            ],
-          ),
+          )
         ],
       ),
     );

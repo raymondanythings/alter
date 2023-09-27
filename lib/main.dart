@@ -53,6 +53,7 @@ class Alter extends ConsumerWidget {
       };
     }
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'Alter',
       theme: ref.watch(platformThemeProvider).isDarkMode
           ? Theme.dark
@@ -64,6 +65,9 @@ class Alter extends ConsumerWidget {
 
 class Theme {
   static final ThemeData light = ThemeData(
+    splashFactory: NoSplash.splashFactory,
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
     primaryColor: const Color(
       0xFFFEF8E5,
     ),
@@ -76,14 +80,20 @@ class Theme {
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
     ),
-    splashColor: Colors.transparent,
     bottomAppBarTheme: const BottomAppBarTheme(
       surfaceTintColor: Colors.white,
       color: Colors.white,
     ),
+    inputDecorationTheme: const InputDecorationTheme(
+      fillColor: Colors.white,
+    ),
   );
 
   static final ThemeData dark = ThemeData(
+    // Ripple 효과 지우기
+    splashFactory: NoSplash.splashFactory,
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
     primaryColor: const Color(
       0xff0B63E0,
     ),

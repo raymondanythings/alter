@@ -1,3 +1,5 @@
+import 'package:alter/common/views/widgets/input.dart';
+import 'package:alter/constants/gaps.dart';
 import 'package:alter/constants/sizes.dart';
 import 'package:alter/features/authenticate/view_models/login_view_model.dart';
 import 'package:alter/features/authenticate/views/widgets/form_button.dart';
@@ -31,62 +33,89 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         ref
             .read(loginProvider.notifier)
             .login(formData["email"]!, formData["password"]!, context);
-
-        // // context.goNamed(
-        // //   InterestsScreen.routeName,
-        // // );
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Sizes.size40,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    onSaved: (newValue) => _onSaveFormData("email", newValue),
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return "Plase write your email";
-                      }
-                      return null;
-                    },
+    final bool isLoading = ref.watch(loginProvider).isLoading;
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Sizes.size40,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Input(
+                  onSaved: (newValue) => _onSaveFormData(
+                    "email",
+                    newValue,
                   ),
-                  TextFormField(
-                    obscureText: true,
-                    onSaved: (newValue) =>
-                        _onSaveFormData("password", newValue),
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return "Plase write your password";
-                      }
-                      return null;
-                    },
+                  validator: (value) {
+                    if (value != null && value.isEmpty) {
+                      return "Plase write your email";
+                    }
+                    return null;
+                  },
+                  label: const Text(
+                    "Email",
                   ),
-                  FormButton(
-                    onTap: _onSubmitTap,
-                    disabled: false,
-                    text: "Login",
+                ),
+                Gaps.v10,
+                Input(
+                  obscureText: true,
+                  onSaved: (newValue) => _onSaveFormData("password", newValue),
+                  validator: (value) {
+                    if (value != null && value.isEmpty) {
+                      return "Plase write your password";
+                    }
+                    return null;
+                  },
+                  label: const Text(
+                    "Password",
                   ),
-                  CupertinoButton(
-                    onPressed: widget.onNavigationtap,
-                    child: const Text("Create Account"),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+                ),
+                Gaps.v10,
+                FormButton(
+                  onTap: !isLoading ? _onSubmitTap : () {},
+                  disabled: isLoading,
+                  child: isLoading
+                      ? const SizedBox(
+                          height: Sizes.size14,
+                          child: CupertinoActivityIndicator(),
+                        )
+                      : AnimatedDefaultTextStyle(
+                          duration: const Duration(
+                            milliseconds: 100,
+                          ),
+                          style: TextStyle(
+                            color: isLoading
+                                ? Colors.grey.shade400
+                                : Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          child: const Text(
+                            "Login",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                ),
+                CupertinoButton(
+                  onPressed: widget.onNavigationtap,
+                  child: const Text("Create Account"),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

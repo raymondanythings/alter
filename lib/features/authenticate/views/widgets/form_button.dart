@@ -7,47 +7,37 @@ class FormButton extends StatelessWidget {
     required this.disabled,
     this.onTap,
     this.text,
+    required this.child,
   });
   final String? text;
   final bool disabled;
   final Function()? onTap;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: !disabled && onTap != null ? onTap : null,
-      child: FractionallySizedBox(
-        widthFactor: 1,
-        child: AnimatedContainer(
-          duration: const Duration(
-            milliseconds: 100,
+      child: AnimatedContainer(
+        duration: const Duration(
+          milliseconds: 100,
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: Sizes.size16,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(
+            Sizes.size5,
           ),
-          padding: const EdgeInsets.symmetric(
-            vertical: Sizes.size16,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              Sizes.size5,
-            ),
-            color: disabled
-                ? Theme.of(context).disabledColor
-                : Theme.of(context).primaryColor,
-          ),
-          child: AnimatedDefaultTextStyle(
-            duration: const Duration(
-              milliseconds: 100,
-            ),
-            style: TextStyle(
-              color: disabled
-                  ? Colors.grey.shade400
-                  : Theme.of(context).textTheme.displayMedium!.color,
-              fontWeight: FontWeight.w600,
-            ),
-            child: Text(
-              text ?? "Next",
-              textAlign: TextAlign.center,
-            ),
-          ),
+          color: disabled
+              ? Theme.of(context).disabledColor
+              : Theme.of(context).primaryColor,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            child,
+          ],
         ),
       ),
     );

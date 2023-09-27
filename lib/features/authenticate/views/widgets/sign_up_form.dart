@@ -1,3 +1,5 @@
+import 'package:alter/common/views/widgets/input.dart';
+import 'package:alter/constants/gaps.dart';
 import 'package:alter/constants/sizes.dart';
 import 'package:alter/features/authenticate/view_models/sign_up_view_model.dart';
 import 'package:alter/features/authenticate/views/widgets/form_button.dart';
@@ -37,6 +39,7 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLoading = ref.watch(signUpProvider).isLoading;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -49,16 +52,23 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
               key: _formKey,
               child: Column(
                 children: [
-                  TextFormField(
-                    onSaved: (newValue) => _onSaveFormData("email", newValue),
+                  Input(
+                    onSaved: (newValue) => _onSaveFormData(
+                      "email",
+                      newValue,
+                    ),
                     validator: (value) {
                       if (value != null && value.isEmpty) {
                         return "Plase write your email";
                       }
                       return null;
                     },
+                    label: const Text(
+                      "Email",
+                    ),
                   ),
-                  TextFormField(
+                  Gaps.v10,
+                  Input(
                     obscureText: true,
                     onSaved: (newValue) =>
                         _onSaveFormData("password", newValue),
@@ -68,11 +78,37 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
                       }
                       return null;
                     },
+                    label: const Text(
+                      "Password",
+                    ),
                   ),
+                  Gaps.v10,
                   FormButton(
-                    onTap: _onSubmitTap,
-                    disabled: false,
-                    text: "Join",
+                    onTap: !isLoading ? _onSubmitTap : () {},
+                    disabled: isLoading,
+                    child: isLoading
+                        ? const SizedBox(
+                            height: Sizes.size14,
+                            child: CupertinoActivityIndicator(),
+                          )
+                        : AnimatedDefaultTextStyle(
+                            duration: const Duration(
+                              milliseconds: 100,
+                            ),
+                            style: TextStyle(
+                              color: isLoading
+                                  ? Colors.grey.shade400
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .displayMedium!
+                                      .color,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            child: const Text(
+                              "Join",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                   ),
                   CupertinoButton(
                     onPressed: widget.onNavigationtap,

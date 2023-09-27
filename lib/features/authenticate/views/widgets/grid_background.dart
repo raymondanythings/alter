@@ -53,8 +53,8 @@ class _GridBackgroundState extends State<GridBackground>
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: axisCount,
-                crossAxisSpacing: Sizes.size10,
-                mainAxisSpacing: Sizes.size10,
+                crossAxisSpacing: Sizes.size20,
+                mainAxisSpacing: Sizes.size20,
               ),
               itemBuilder: (context, index) {
                 return AnimationConfiguration.staggeredGrid(
@@ -64,9 +64,29 @@ class _GridBackgroundState extends State<GridBackground>
                   ),
                   columnCount: axisCount,
                   child: FadeInAnimation(
-                    child: Image.asset(
-                      "assets/images/bg_${index % imageList.length + 1}.png",
-                      fit: BoxFit.cover,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(
+                            Sizes.size14,
+                          ),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade700,
+                            blurRadius: Sizes.size1,
+                            offset: const Offset(
+                              Sizes.size2,
+                              Sizes.size2,
+                            ),
+                          ),
+                        ],
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.asset(
+                        "assets/images/bg_${index % imageList.length + 1}.png",
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 );

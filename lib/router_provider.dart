@@ -25,7 +25,8 @@ final routerProvider = Provider(
         },
       ),
       GoRoute(
-        path: "/",
+        path: MainNavigation.routeUrl,
+        name: MainNavigation.routeName,
         builder: (context, state) => const MainNavigation(),
       ),
     ],
