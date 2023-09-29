@@ -52,6 +52,7 @@ class Alter extends ConsumerWidget {
         ref.read(platformThemeProvider.notifier).setTheme(isDarkMode);
       };
     }
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Alter',
