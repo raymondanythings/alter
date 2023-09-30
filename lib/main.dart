@@ -6,11 +6,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+    ],
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -85,6 +91,9 @@ class Theme {
       surfaceTintColor: Colors.white,
       color: Colors.white,
     ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Color(0xFFFEF8E5),
+    ),
     inputDecorationTheme: const InputDecorationTheme(
       fillColor: Colors.white,
     ),
@@ -141,6 +150,15 @@ class Theme {
     bottomAppBarTheme: const BottomAppBarTheme(
       color: Color(
         0xFF111111,
+      ),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Color(
+        0xFF111111,
+      ),
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Color(
+        0xFF333333,
       ),
     ),
   );

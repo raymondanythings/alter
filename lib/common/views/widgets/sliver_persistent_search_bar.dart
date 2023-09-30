@@ -35,8 +35,7 @@ class SliverPersistentSearchBar extends SliverPersistentHeaderDelegate {
           controller: controller,
           onChanged: onChanged,
           onSubmitted: onSubmitted,
-          onSuffixTap: onSuffixTap,
-          suffixIcon: const Icon(FontAwesomeIcons.paperPlane),
+          // onSuffixTap: onSuffixTap,
           suffixMode: OverlayVisibilityMode.always,
           style: TextStyle(
             color: isDarkMode(context) ? Colors.white : Colors.black,

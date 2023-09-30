@@ -1,4 +1,6 @@
+import 'package:alter/features/diary/views/diary_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MainNavigation extends ConsumerStatefulWidget {
@@ -13,6 +15,14 @@ class MainNavigation extends ConsumerStatefulWidget {
 class _MainNavigationState extends ConsumerState<MainNavigation> {
   late final PageController _pageController;
   int _currentIndex = 0;
+
+  void _onCheckKeyboardOpen() {
+    final bool isVisible =
+        KeyboardVisibilityProvider.isKeyboardVisible(context);
+    if (isVisible) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+  }
 
   @override
   void initState() {
@@ -29,44 +39,45 @@ class _MainNavigationState extends ConsumerState<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (value) {
-          setState(() {
-            _currentIndex = value;
-          });
-        },
-        children: const [
-          Center(
-            child: Text("1"),
-          ),
-          Center(
-            child: Text("2"),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(
-              milliseconds: 500,
+    return GestureDetector(
+      onTap: _onCheckKeyboardOpen,
+      child: Scaffold(
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (value) {
+            setState(() {
+              _currentIndex = value;
+            });
+          },
+          children: const [
+            DiaryScreen(),
+            Center(
+              child: Text("2"),
             ),
-            curve: Curves.easeInOut,
-          );
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Start",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.camera_enhance),
-            label: "Second",
-          ),
-        ],
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(
+                milliseconds: 500,
+              ),
+              curve: Curves.easeInOut,
+            );
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Start",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera_enhance),
+              label: "Second",
+            ),
+          ],
+        ),
       ),
     );
   }
