@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:alter/features/authenticate/repository/auth_repository.dart';
-import 'package:alter/features/tab_navigation/navigation_screen.dart';
+import 'package:alter/features/tab_navigation/views/navigation_screen.dart';
 import 'package:alter/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

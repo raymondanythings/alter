@@ -1,7 +1,7 @@
 import 'package:alter/features/authenticate/repository/auth_repository.dart';
 import 'package:alter/features/authenticate/views/auth_screen.dart';
 import 'package:alter/features/diary/views/widgets/diary.dart';
-import 'package:alter/features/tab_navigation/navigation_screen.dart';
+import 'package:alter/features/tab_navigation/views/navigation_screen.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -34,10 +34,13 @@ final routerProvider = Provider(
         ),
         routes: [
           GoRoute(
-            path: Diary.routeUrl,
+            path: "$Diary.routeUrl/:index",
             name: Diary.routeName,
             builder: (context, state) {
-              return const Diary();
+              final String index = state.pathParameters['index']!;
+              return Diary(
+                index: int.parse(index),
+              );
             },
           )
         ],

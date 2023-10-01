@@ -1,25 +1,71 @@
 import 'package:alter/common/views/widgets/sliver_persistent_search_bar.dart';
 import 'package:alter/constants/breakpoints.dart';
 import 'package:alter/constants/sizes.dart';
+import 'package:alter/features/diary/models/diary_model.dart';
+import 'package:alter/features/diary/view_models/diary_view_model.dart';
 import 'package:alter/features/diary/views/widgets/diary.dart';
 import 'package:alter/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class DiaryScreen extends StatefulWidget {
+class DiaryScreen extends ConsumerStatefulWidget {
   const DiaryScreen({super.key});
 
   @override
-  State<DiaryScreen> createState() => _DiaryScreenState();
+  ConsumerState<DiaryScreen> createState() => _DiaryScreenState();
 }
 
-class _DiaryScreenState extends State<DiaryScreen> {
+class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   late TextEditingController _controller;
 
-  void _onDiaryTap() {
-    context.pushNamed(Diary.routeName);
+  void _onDiaryTap(int index) {
+    context.pushNamed(Diary.routeName, pathParameters: {
+      'index': index.toString(),
+    });
+  }
+
+  Future<void> _onRemoveDiary(String? docId) async {
+    if (docId != null) {
+      await ref.read(diaryProvider.notifier).removeDiary(docId);
+    }
+    context.pop();
+  }
+
+  void _onDeleteTap(DiaryModel diary) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoActionSheet(
+            title: const Text("Delete Diary"),
+            message: const Text(
+              "Are you sure you want to do this?",
+            ),
+            actions: [
+              CupertinoActionSheetAction(
+                isDestructiveAction: true,
+                onPressed: () => _onRemoveDiary(diary.id),
+                child: const Text(
+                  "Delete",
+                ),
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              isDefaultAction: true,
+              onPressed: () {
+                context.pop();
+              },
+              child: const Text(
+                "Cancel",
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+              ),
+            ));
+      },
+    );
   }
 
   @override
@@ -36,64 +82,74 @@ class _DiaryScreenState extends State<DiaryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            // pinned: true,
-            floating: true,
-            delegate: SliverPersistentSearchBar(
-              controller: _controller,
-              onSubmitted: (value) {},
-              onSuffixTap: () {},
-            ),
-          ),
-          CupertinoSliverRefreshControl(
-            onRefresh: () async {
-              await Future<void>.delayed(
-                const Duration(milliseconds: 1000),
-              );
-            },
-          ),
-          SliverGrid(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return GestureDetector(
-                  onTap: _onDiaryTap,
-                  child: Container(
-                    padding: const EdgeInsets.all(
-                      Sizes.size10,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          Sizes.size14,
-                        ),
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: AspectRatio(
-                        aspectRatio: 1 / 1,
-                        child: Hero(
-                          tag: 'image$index',
-                          child: Image.asset(
-                            "assets/images/bg_1.png",
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+    return ref.watch(diaryProvider).when(
+          data: (diaries) {
+            return SafeArea(
+              child: CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    // pinned: true,
+                    floating: true,
+                    delegate: SliverPersistentSearchBar(
+                      controller: _controller,
+                      onSubmitted: (value) {},
+                      onSuffixTap: () {},
                     ),
                   ),
-                );
-              },
-              childCount: 20,
-            ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
+                  CupertinoSliverRefreshControl(
+                    onRefresh: () async {
+                      await ref.read(diaryProvider.notifier).refetch();
+                    },
+                  ),
+                  SliverGrid(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return GestureDetector(
+                          onTap: () => _onDiaryTap(index),
+                          onLongPress: () => _onDeleteTap(diaries[index]),
+                          child: Container(
+                            padding: const EdgeInsets.all(
+                              Sizes.size10,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  Sizes.size14,
+                                ),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: AspectRatio(
+                                aspectRatio: 1 / 1,
+                                child: Hero(
+                                  tag: '${diaries[index].createdAt}',
+                                  child: Image.network(
+                                    diaries[index].picture,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      childCount: diaries.length,
+                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
           ),
-        ],
-      ),
-    );
+          error: (error, stackTrace) => const Center(
+            child: Text("Could not find diaries."),
+          ),
+        );
   }
 }
 

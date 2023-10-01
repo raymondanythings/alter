@@ -22,7 +22,9 @@ class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey _stackKey = GlobalKey();
 
   void _onNavigationTap(String type) {
-    _selectedAuthType = type;
+    setState(() {
+      _selectedAuthType = type;
+    });
   }
 
   @override

@@ -1,89 +1,146 @@
+import 'package:alter/constants/gaps.dart';
 import 'package:alter/constants/sizes.dart';
+import 'package:alter/features/diary/view_models/diary_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-class Diary extends StatefulWidget {
+class Diary extends ConsumerStatefulWidget {
   static const String routeName = "diary";
   static const String routeUrl = "diary";
-  const Diary({super.key});
+
+  final int index;
+
+  const Diary({
+    super.key,
+    required this.index,
+  });
 
   @override
-  State<Diary> createState() => _DiaryState();
+  ConsumerState<Diary> createState() => _DiaryState();
 }
 
-class _DiaryState extends State<Diary> {
+class _DiaryState extends ConsumerState<Diary> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              AspectRatio(
-                aspectRatio: 9 / 16,
-                child: Hero(
-                  tag: "image0",
-                  child: Image.asset(
-                    "assets/images/bg_1.png",
-                    fit: BoxFit.cover,
+    return ref.watch(diaryProvider).when(
+          data: (diaries) {
+            final diary = diaries[widget.index];
+            return Scaffold(
+              body: Stack(
+                children: [
+                  Hero(
+                    tag: '${diary.createdAt}',
+                    child: Image.network(
+                      diary.picture,
+                      fit: BoxFit.fill,
+                      height: MediaQuery.of(context).size.height,
+                    ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: Sizes.size40,
-                left: Sizes.size10,
-                child: IconButton(
-                  icon: const FaIcon(
-                    FontAwesomeIcons.arrowLeft,
+                  SlidingUpPanel(
+                    maxHeight: MediaQuery.of(context).size.height - 100,
+                    minHeight: 120,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(
+                        Sizes.size14,
+                      ),
+                    ),
+                    panel: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: Sizes.size14,
+                        horizontal: Sizes.size10,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    diary.title,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 15,
+                                      foregroundImage: NetworkImage(
+                                        "https://avatars.githubusercontent.com/u/73725736",
+                                      ),
+                                    ),
+                                    Gaps.h10,
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "@Raymond",
+                                          style: TextStyle(
+                                            fontSize: Sizes.size10,
+                                          ),
+                                        ),
+                                        Gaps.v2,
+                                        Text(
+                                          "Do your best, if u want it.",
+                                          style: TextStyle(
+                                            fontSize: Sizes.size8,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Gaps.v10,
+                            Text(
+                              diary.diary,
+                              style: const TextStyle(
+                                fontSize: Sizes.size12,
+                              ),
+                            ),
+                            Text(
+                              diary.diary,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  onPressed: () {
-                    context.pop();
-                  },
-                ),
+                  Positioned(
+                    top: Sizes.size40,
+                    left: Sizes.size10,
+                    child: IconButton(
+                      icon: const FaIcon(
+                        FontAwesomeIcons.arrowLeft,
+                      ),
+                      onPressed: () {
+                        context.pop();
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
+            );
+          },
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
           ),
-          // const ListTile(
-          //   contentPadding: EdgeInsets.zero,
-          //   visualDensity: VisualDensity.compact,
-          //   dense: true,
-          //   leading: CircleAvatar(
-          //     radius: Sizes.size16,
-          //   ),
-          //   title: Text(
-          //     "@Raymond",
-          //     style: TextStyle(
-          //       fontSize: Sizes.size12,
-          //     ),
-          //   ),
-          //   subtitle: Text(
-          //     "what is summary here?",
-          //     style: TextStyle(
-          //       fontSize: Sizes.size10,
-          //     ),
-          //   ),
-          // ),
-          // const Row(
-          //   children: [
-          //     Text(
-          //       "Why do we use it?",
-          //       style: TextStyle(
-          //           fontSize: Sizes.size16, fontWeight: FontWeight.w500),
-          //     ),
-          //   ],
-          // ),
-          // const Text(
-          //   "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
-          //   maxLines: 2,
-          //   overflow: TextOverflow.ellipsis,
-          //   style: TextStyle(
-          //     fontSize: Sizes.size12,
-          //   ),
-          // ),
-        ],
-      ),
-    );
+          error: (error, stackTrace) => const Center(
+            child: Text("Could not find diaries."),
+          ),
+        );
   }
 }

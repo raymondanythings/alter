@@ -26,11 +26,12 @@ class DecoratedInputBorder extends InputBorder {
   EdgeInsetsGeometry get dimensions => child.dimensions;
 
   @override
-  InputBorder copyWith(
-      {BorderSide? borderSide,
-      InputBorder? child,
-      BoxShadow? shadow,
-      bool? isOutline}) {
+  InputBorder copyWith({
+    BorderSide? borderSide,
+    InputBorder? child,
+    BoxShadow? shadow,
+    bool? isOutline,
+  }) {
     return DecoratedInputBorder(
       child: (child ?? this.child).copyWith(borderSide: borderSide),
       shadow: shadow ?? this.shadow,

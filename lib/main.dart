@@ -7,7 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:replicate/replicate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -17,10 +19,12 @@ void main() async {
       DeviceOrientation.portraitUp,
     ],
   );
+  await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  Replicate.apiKey = dotenv.get("REPLICATE_API_KEY");
   final preferences = await SharedPreferences.getInstance();
   final repository = PlatformThemeRepository(preferences);
 
@@ -84,12 +88,16 @@ class Theme {
     ),
     useMaterial3: true,
     appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
+      backgroundColor: Color(
+        0xFFFEF7E3,
+      ),
+      surfaceTintColor: Color(
+        0xFFFEF7E3,
+      ),
     ),
     bottomAppBarTheme: const BottomAppBarTheme(
-      surfaceTintColor: Colors.white,
-      color: Colors.white,
+      surfaceTintColor: Color(0xFFFEF8E5),
+      color: Colors.transparent,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Color(0xFFFEF8E5),
@@ -151,7 +159,15 @@ class Theme {
       color: Color(
         0xFF111111,
       ),
+      surfaceTintColor: Color(
+        0xFF111111,
+      ),
     ),
+    inputDecorationTheme: const InputDecorationTheme(
+        fillColor: Colors.white,
+        labelStyle: TextStyle(
+          color: Colors.black,
+        )),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Color(
         0xFF111111,
